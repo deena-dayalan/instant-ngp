@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+cd ${HOME}
+SOFT_DIR=${HOME}/instant-ngp
+EXEC_DIR=${SOFT_DIR}/build
+nvidia-smi
+## Check for GPU architecture
+if [ $? -eq 0 ]; then
+	if [[ -f "${EXEC_DIR}/testbed" && -x "${EXEC_DIR}/testbed" ]]; then
+		exec ${EXEC_DIR}/testbed "$@"
+	else
+		## remove instant-ngp dir if present
+		rm -rf ${SOFT_DIR}
+		## get dependencies
+		git clone --recurse-submodules -j8 https://github.com/NVlabs/instant-ngp
+		cd ${SOFT_DIR}
+		
+		## Build Instant npg
+		cmake -DNGP_BUILD_WITH_GUI=on ./ -B ./build
+		cmake --build build --config RelWithDebInfo -j 16
+		if [ $? -eq 0 ]; then
+			echo "Instant-ngp built successfully..."
+			exec ${EXEC_DIR}/testbed "$@"
+		else 
+			echo "Instant-ngp built failed!!!"
+			exit 1
+		fi
+else
+	echo "GPU node required for building Instant-ngp!!"
+	exit 1
+fi
