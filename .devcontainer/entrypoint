@@ -26,6 +26,7 @@ if [ $? -eq 0 ]; then
 			echo "Instant-ngp built failed!!!"
 			exit 1
 		fi
+	fi
 else
 	echo "GPU node required for building Instant-ngp!!"
 	exit 1
