@@ -1,4 +1,5 @@
-FROM nvidia/cuda:10.2-devel-ubuntu18.04
+#FROM nvidia/cuda:10.2-devel-ubuntu18.04
+FROM nvidia/cuda:11.6.0-devel-ubuntu20.04
 
 CMD nvidia-smi
 
@@ -13,6 +14,7 @@ RUN echo "Installing apt packages..." \
 	&& apt -y update --no-install-recommends \
 	&& apt -y upgrade \
 	&& apt -y install --no-install-recommends \
+	vim \
 	git \
 	wget \
 	ffmpeg \
